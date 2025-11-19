@@ -224,17 +224,32 @@ switch (platform) {
         }
         break
       case 'arm':
-        localFileExisted = existsSync(
-          join(__dirname, 'clipboard.linux-arm-gnueabihf.node')
-        )
-        try {
-          if (localFileExisted) {
-            nativeBinding = require('./clipboard.linux-arm-gnueabihf.node')
-          } else {
-            nativeBinding = require('@crosscopy/clipboard-linux-arm-gnueabihf')
+        if (isMusl()) {
+          localFileExisted = existsSync(
+            join(__dirname, 'clipboard.linux-arm-musleabihf.node')
+          )
+          try {
+            if (localFileExisted) {
+              nativeBinding = require('./clipboard.linux-arm-musleabihf.node')
+            } else {
+              nativeBinding = require('@crosscopy/clipboard-linux-arm-musleabihf')
+            }
+          } catch (e) {
+            loadError = e
           }
-        } catch (e) {
-          loadError = e
+        } else {
+          localFileExisted = existsSync(
+            join(__dirname, 'clipboard.linux-arm-gnueabihf.node')
+          )
+          try {
+            if (localFileExisted) {
+              nativeBinding = require('./clipboard.linux-arm-gnueabihf.node')
+            } else {
+              nativeBinding = require('@crosscopy/clipboard-linux-arm-gnueabihf')
+            }
+          } catch (e) {
+            loadError = e
+          }
         }
         break
       case 'riscv64':
